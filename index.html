@@ -269,6 +269,12 @@ body::after{
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
 }
 #desktop.on{display:block;animation:deskFade .6s ease}
+/* 探索模式下临时开启桌面只为显示窗口:背景透明,隐藏图标/任务栏/水印 */
+#desktop.overlay-mode{background:transparent;background-image:none}
+#desktop.overlay-mode::before{display:none}
+#desktop.overlay-mode #desk-icons,
+#desktop.overlay-mode #desk-bar,
+#desktop.overlay-mode #desk-watermark{display:none}
 @keyframes deskFade{from{opacity:0}to{opacity:1}}
 /* 纸张暗角 */
 #desktop::before{
@@ -477,6 +483,54 @@ body::after{
   .desk-icon{width:78px}
   .win{min-width:240px;max-width:calc(100vw - 24px)}
 }
+/* ── Explore: tabletop opening ── */
+#tt-cv{position:fixed;inset:0;width:100vw;height:100vh;image-rendering:pixelated;display:block}
+#tt-dbox{position:fixed;left:50%;bottom:6%;transform:translateX(-50%) translateY(16px);
+  width:min(840px,90vw);z-index:8;opacity:0;transition:opacity .35s,transform .35s;pointer-events:none}
+#tt-dbox.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#tt-dbox .tt-frame{position:relative;background:#c4b9a0;border:2px solid #1a1612;
+  box-shadow:6px 6px 0 #1a1612;padding:22px 28px 26px}
+#tt-dbox .tt-who{position:absolute;top:-16px;left:24px;background:#1a1612;color:#c4b9a0;
+  font-family:'Special Elite',monospace;font-size:13px;letter-spacing:.14em;padding:4px 16px}
+#tt-dbox .tt-txt{color:#1a1612;font-size:18px;line-height:1.9;min-height:60px;letter-spacing:.02em}
+#tt-dbox .tt-adv{position:absolute;right:20px;bottom:12px;color:#1a1612;opacity:.5;
+  font-size:12px;font-family:'Special Elite',monospace;letter-spacing:.1em;animation:ttNudge 1.4s ease-in-out infinite}
+@keyframes ttNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+#tt-nameRow{display:none;margin-top:4px}
+#tt-nameRow input{font-family:inherit;font-size:18px;color:#1a1612;background:transparent;border:none;
+  outline:none;border-bottom:2px solid #1a1612;padding:3px 2px;width:280px;caret-color:#963a32}
+#tt-nameRow .tt-ph{color:rgba(26,22,18,.4);font-size:13px;margin-left:10px;font-family:'Special Elite',monospace}
+#tt-choices{position:fixed;left:50%;bottom:calc(6% + 160px);transform:translateX(-50%);
+  z-index:9;display:flex;gap:14px;opacity:0;pointer-events:none;transition:opacity .3s}
+#tt-choices.show{opacity:1;pointer-events:auto}
+.tt-choice{font-family:'Special Elite',monospace;font-size:14px;letter-spacing:.06em;color:#1a1612;
+  background:#c4b9a0;border:2px solid #1a1612;padding:11px 22px;cursor:pointer;transition:.12s;box-shadow:4px 4px 0 #1a1612}
+.tt-choice:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 #1a1612;background:#1a1612;color:#c4b9a0}
+#tt-label{position:fixed;z-index:10;font-family:'Special Elite',monospace;font-size:13px;letter-spacing:.16em;
+  color:#c4b9a0;background:#1a1612;padding:6px 14px;white-space:nowrap;opacity:0;transition:.2s;pointer-events:none}
+#tt-label.show{opacity:1}
+#tt-label b{color:#963a32;font-weight:400}
+#tt-lidT,#tt-lidB{position:fixed;left:0;width:100%;height:0;background:#1a1612;z-index:30;
+  transition:height .9s cubic-bezier(.7,0,.3,1);pointer-events:none}
+#tt-lidT{top:0}#tt-lidB{bottom:0}
+#tabletop.closing #tt-lidT,#tabletop.closing #tt-lidB{height:52%}
+#tt-fade{position:fixed;inset:0;background:#1a1612;z-index:40;pointer-events:none;opacity:1;transition:opacity 1.2s}
+#tt-fade.gone{opacity:0}
+/* ── Explore: apartment ── */
+#apt-cv{position:fixed;inset:0;width:100vw;height:100vh;image-rendering:pixelated;display:block}
+#apt-hud{position:fixed;bottom:16px;left:0;right:0;text-align:center;z-index:5;pointer-events:none;
+  font-family:'Special Elite',monospace;font-size:12px;color:rgba(26,22,18,.6);letter-spacing:.14em}
+#apt-tip{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);z-index:6;pointer-events:none;
+  font-family:'Special Elite',monospace;font-size:14px;letter-spacing:.1em;color:#c4b9a0;
+  background:#1a1612;padding:7px 16px;opacity:0;transition:opacity .18s}
+#apt-tip.show{opacity:1}
+#apt-tip b{color:#963a32;font-weight:400}
+#apt-exit{position:fixed;top:16px;right:18px;z-index:7;font-family:'Special Elite',monospace;font-size:12px;
+  letter-spacing:.1em;color:rgba(196,185,160,.6);background:rgba(26,22,18,.5);border:1px solid rgba(196,185,160,.3);
+  padding:7px 14px;cursor:pointer;transition:.15s}
+#apt-exit:hover{color:#c4b9a0;background:#1a1612}
+#apt-fade{position:fixed;inset:0;background:#1a1612;z-index:40;pointer-events:none;opacity:1;transition:opacity 1s}
+#apt-fade.gone{opacity:0}
 </style>
 </head>
 <body>
@@ -496,6 +550,33 @@ body::after{
     <span id="desk-clock"></span>
     <button id="desk-terminal"></button>
   </div>
+</div>
+
+<!-- ── Explore: tabletop opening ── -->
+<div id="tabletop" style="display:none;position:fixed;inset:0;z-index:50;background:#1a1612">
+  <canvas id="tt-cv"></canvas>
+  <div id="tt-label"><span id="tt-lbl-txt">翻开它</span> · <b>desktop</b></div>
+  <div id="tt-choices">
+    <button class="tt-choice" id="tt-explore">闭上眼，去探索</button>
+    <button class="tt-choice" id="tt-desktop">翻开桌上的纸</button>
+  </div>
+  <div id="tt-dbox"><div class="tt-frame">
+    <div class="tt-who" id="tt-who">Captain</div>
+    <div class="tt-txt" id="tt-txt"></div>
+    <div id="tt-nameRow"><input id="tt-nameIn" type="text" autocomplete="off" spellcheck="false"><span class="tt-ph">写下名字，回车</span></div>
+    <div class="tt-adv" id="tt-adv">▸ 继续</div>
+  </div></div>
+  <div id="tt-lidT"></div><div id="tt-lidB"></div>
+  <div id="tt-fade"></div>
+</div>
+
+<!-- ── Explore: apartment ── -->
+<div id="apt" style="display:none;position:fixed;inset:0;z-index:50;background:#1a1612">
+  <canvas id="apt-cv"></canvas>
+  <div id="apt-hud">↑↓ 前进 / 后退 · ←→ 转身 · 走近物品点击打开</div>
+  <div id="apt-tip"></div>
+  <button id="apt-exit" onclick="exploreToDesktop()">▸ 翻开桌面</button>
+  <div id="apt-fade"></div>
 </div>
 
 <script>
@@ -1032,8 +1113,9 @@ async function pickPath(action) {
   } else if (action === 'explore') {
     stampChar('>'); stampChar(' ');
     await type(t('steppingInside'), 36);
-    await blank();
-    await type(t('comingExplore'), 20);
+    await wait(500);
+    launchTabletop();
+    return;
   } else {
     stampChar('>'); stampChar(' ');
     await type(t('terminalReady'), 36);
@@ -1421,7 +1503,17 @@ function openWindow(item) {
     e.stopPropagation();
     clickSound();
     win.classList.add('closing');
-    setTimeout(() => { win.remove(); delete openWindows[item.id]; }, 200);
+    setTimeout(() => {
+      win.remove(); delete openWindows[item.id];
+      // 探索模式下:关窗后解冻走动,并把桌面收回(撤掉临时 overlay)
+      if (document.getElementById('apt').style.display === 'block') {
+        if (Object.keys(openWindows).length === 0) {
+          const desk = document.getElementById('desktop');
+          desk.classList.remove('on','overlay-mode');
+        }
+        apWinOpen = false;
+      }
+    }, 200);
   });
   // 最小化(暂留) / 最大化全屏切换
   win.querySelector('.min').addEventListener('click', e => { e.stopPropagation(); clickSound(); });
@@ -1831,10 +1923,11 @@ function runTermCommand(cmd, outEl) {
   const items = ['about','cv','portfolio','research','blog'];
   if (c === 'help') {
     termPrint(outEl, lang === 'zh'
-      ? '可用命令: help, clear, ls, open <名称>, about, neofetch'
-      : 'commands: help, clear, ls, open <name>, about, neofetch');
+      ? '可用命令: help, clear, ls, open <名称>, desktop, explore, about, neofetch'
+      : 'commands: help, clear, ls, open <name>, desktop, explore, about, neofetch');
     termPrint(outEl, 'ls — ' + (lang==='zh'?'列出内容':'list content'));
     termPrint(outEl, 'open <name> — ' + (lang==='zh'?'打开窗口':'open a window'));
+    termPrint(outEl, 'desktop / explore — ' + (lang==='zh'?'切换到桌面或探索':'switch to desktop or explore'));
   } else if (c === 'clear') {
     outEl.innerHTML = '';
   } else if (c === 'ls') {
@@ -1852,6 +1945,12 @@ function runTermCommand(cmd, outEl) {
     termPrint(outEl, lang==='zh' ? '翁小淇 — 声音 · 代码 · 故事' : 'Xiaoqi Weng — sound · code · stories');
   } else if (c === 'neofetch') {
     runNeofetch(outEl);
+  } else if (c === 'desktop') {
+    termPrint(outEl, lang==='zh' ? '打开桌面…' : 'opening desktop...');
+    setTimeout(() => { closeTerminalToDesktop(); }, 400);
+  } else if (c === 'explore') {
+    termPrint(outEl, lang==='zh' ? '走进去…' : 'stepping inside...');
+    setTimeout(() => { closeTerminalToExplore(); }, 400);
   } else if (c === 'captain') {
     runCaptain(outEl);
   } else {
@@ -1918,6 +2017,282 @@ function runCaptain(outEl) {
     '(toilet water sommelier ★★★★☆)'
   ];
   termBlock(outEl, lines, 'wrap');
+}
+
+// ═════════════════════════════════════
+//  EXPLORE — tabletop opening + apartment (1-bit)
+// ═════════════════════════════════════
+const EX = { INK:[26,22,18], PAPER:[196,185,160], RED:[150,58,50],
+  BAYER:[[0,32,8,40,2,34,10,42],[48,16,56,24,50,18,58,26],[12,44,4,36,14,46,6,38],[60,28,52,20,62,30,54,22],[3,35,11,43,1,33,9,41],[51,19,59,27,49,17,57,25],[15,47,7,39,13,45,5,37],[63,31,55,23,61,29,53,21]] };
+function exL(zh,en){return lang==='zh'?zh:en;}
+
+// ── 跑团桌开场 ──
+let ttCv,ttCx,ttW,ttH,ttRAF=null,ttBreathe=0,ttPaperActive=false,ttPaperGlow=0,ttPaperBox={x:0,y:0,w:0,h:0};
+function launchTabletop(){
+  const page=document.getElementById('page');
+  page.style.transition='opacity .5s ease';page.style.opacity='0';
+  setTimeout(()=>{page.style.display='none';},500);
+  const tt=document.getElementById('tabletop');tt.style.display='block';
+  ttCv=document.getElementById('tt-cv');ttCx=ttCv.getContext('2d');
+  ttResize();addEventListener('resize',ttResize);
+  // 双语按钮/标签
+  document.getElementById('tt-explore').textContent=exL('闭上眼，去探索','Close your eyes, explore');
+  document.getElementById('tt-desktop').textContent=exL('翻开桌上的纸','Open the paper');
+  document.getElementById('tt-lbl-txt').textContent=exL('翻开它','open');
+  document.getElementById('tt-explore').onclick=ttGoExplore;
+  document.getElementById('tt-desktop').onclick=ttGoDesktop;
+  ttCv.onmousemove=ttHover; ttCv.onclick=ttClick;
+  ttBreathe=0;ttPaperActive=false;
+  if(ttRAF)cancelAnimationFrame(ttRAF);
+  ttLoop();
+  setTimeout(()=>document.getElementById('tt-fade').classList.add('gone'),100);
+  ttIntro();
+}
+function ttResize(){ttW=Math.floor(innerWidth/3);ttH=Math.floor(innerHeight/3);ttCv.width=ttW;ttCv.height=ttH;ttCx.imageSmoothingEnabled=false;}
+let ttGray,ttRed;
+function ttClear(){ttGray=new Float32Array(ttW*ttH).fill(1);ttRed=new Uint8Array(ttW*ttH);}
+function ttSetG(x,y,v,red){x|=0;y|=0;if(x<0||y<0||x>=ttW||y>=ttH)return;ttGray[y*ttW+x]=v;if(red)ttRed[y*ttW+x]=1;}
+function ttEll(cx0,cy0,rx,ry,val,red){for(let y=-ry;y<=ry;y++)for(let x=-rx;x<=rx;x++){if((x*x)/(rx*rx)+(y*y)/(ry*ry)<=1)ttSetG(cx0+x,cy0+y,val,red);}}
+function ttRect(x0,y0,w,h,val,red){for(let y=0;y<h;y++)for(let x=0;x<w;x++)ttSetG(x0+x,y0+y,val,red);}
+function ttLine(x0,y0,x1,y1,val){x0=Math.round(x0);y0=Math.round(y0);x1=Math.round(x1);y1=Math.round(y1);const dx=Math.abs(x1-x0),dy=Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1;let err=dx-dy,x=x0,y=y0,g=0;for(;;){ttSetG(x,y,val);if(x===x1&&y===y1)break;if(++g>5000)break;const e2=2*err;if(e2>-dy){err-=dy;x+=sx;}if(e2<dx){err+=dx;y+=sy;}}}
+function ttFlush(){const img=ttCx.createImageData(ttW,ttH),d=img.data;for(let y=0;y<ttH;y++)for(let x=0;x<ttW;x++){const i=y*ttW+x;const dark=ttGray[i]<EX.BAYER[y&7][x&7]/64;const c=dark?(ttRed[i]?EX.RED:EX.INK):EX.PAPER;const o=i*4;d[o]=c[0];d[o+1]=c[1];d[o+2]=c[2];d[o+3]=255;}ttCx.putImageData(img,0,0);}
+
+// 人物半身(Papers Please 风)
+function ttBust(px,py,s,opt){opt=opt||{};
+  if(opt.back){for(let y=0;y<60*s;y++){const t=y/(60*s),hw=(30+t*36)*s;for(let x=-hw;x<hw;x++)ttSetG(px+x,py+18*s+y,0.22);}ttEll(px,py,26*s,30*s,0.06);if(opt.hair==='bun')ttEll(px,py-22*s,9*s,9*s,0.04);return;}
+  let fw=27*s,fh=34*s;if(opt.face==='round'){fw=29*s;fh=30*s;}else if(opt.face==='long'){fw=24*s;fh=37*s;}
+  for(let y=0;y<50*s;y++){const t=y/(50*s),hw=(28+t*40)*s;for(let x=-hw;x<hw;x++)ttSetG(px+x,py+fh+4*s+y,0.34-(x/hw)*0.06);}
+  for(let x=-13*s;x<13*s;x++)ttSetG(px+x,py+fh+4*s+Math.abs(x)*0.3,0.78);
+  ttRect(px-8*s,py+fh*0.7,16*s,14*s,0.6);for(let x=-8*s;x<8*s;x++)ttSetG(px+x,py+fh*0.7+13*s,0.45);
+  for(let y=-fh;y<=fh*0.92;y++)for(let x=-fw;x<=fw;x++){if((x*x)/(fw*fw)+(y*y)/(fh*fh)<=1){let v=0.74;if(x>fw*0.28)v=0.6;if(x>fw*0.58)v=0.5;if(y>fh*0.55)v-=0.05;ttSetG(px+x,py+y,v);}}
+  for(let y=-5*s;y<16*s;y++)ttSetG(px+fw*0.52,py+y,0.46);
+  if(opt.hair!=='none'){for(let y=-fh-5*s;y<=-fh*0.45;y++)for(let x=-fw-3*s;x<=fw+3*s;x++){if((x*x)/((fw+3*s)*(fw+3*s))+((y+fh*0.5)*(y+fh*0.5))/((fh*0.7)*(fh*0.7))<=1)ttSetG(px+x,py+y,0.08);}if(opt.hair==='parted'){for(let y=-fh-4*s;y<-fh*0.6;y++)ttSetG(px,py+y,0.6);}for(let y=-fh*0.42;y<-fh*0.05;y++){ttSetG(px-fw*0.92,py+y,0.1);ttSetG(px+fw*0.92,py+y,0.1);}}
+  else{for(let x=-fw*0.8;x<fw*0.8;x++)ttSetG(px+x,py-fh*0.78,0.3);}
+  for(let x=-16*s;x<-5*s;x++)ttSetG(px+x,py-11*s,0.22);for(let x=5*s;x<16*s;x++)ttSetG(px+x,py-11*s,0.22);
+  for(let x=-15*s;x<-6*s;x++)ttSetG(px+x,py-3*s,0.18);for(let x=6*s;x<15*s;x++)ttSetG(px+x,py-3*s,0.18);
+  ttEll(px-11*s,py-2*s,2*s,2*s,0.12);ttEll(px+11*s,py-2*s,2*s,2*s,0.12);
+  ttEll(px,py+9*s,3.5*s,2.6*s,0.55);ttSetG(px-3*s,py+7*s,0.5);ttSetG(px+3*s,py+7*s,0.5);
+  for(let x=-8*s;x<8*s;x++)ttSetG(px+x,py+20*s,0.3);
+  if(opt.beard){for(let y=20*s;y<fh*0.85;y++)for(let x=-12*s;x<12*s;x++){if((x*x)/((12*s)*(12*s))+((y-26*s)*(y-26*s))/((10*s)*(10*s))<=1)ttSetG(px+x,py+y,0.12);}}
+  if(opt.hat){const top=py-fh-2*s;for(let x=-fw-10*s;x<fw+10*s;x++){ttSetG(px+x,top,0.05);ttSetG(px+x,top-1,0.05);ttSetG(px+x,top+1,0.05);}ttRect(px-fw*0.78,top-18*s,fw*1.56,18*s,0.05);for(let x=-fw*0.78;x<fw*0.78;x++)ttSetG(px+x,top-5*s,0.7);}
+}
+// Captain 守密人头(海盗脸陨石边牧,双蓝眼)
+function ttDog(px,py,s){
+  const hw=28*s,hh=26*s;
+  for(let y=0;y<40*s;y++){const t=y/(40*s),h=(20+t*30)*s;for(let x=-h;x<h;x++)ttSetG(px+x,py+24*s+y,0.84);}
+  ttEll(px+8*s,py+44*s,12*s,12*s,0.18);
+  for(let k=0;k<24*s;k++){const w=(9-k*0.32)*s;for(let x=-w;x<w;x++){ttSetG(px-22*s-k*0.25*s+x,py-24*s+k,k<10*s?0.5:0.12);ttSetG(px+22*s+k*0.25*s+x,py-24*s+k,0.07);}}
+  for(let y=-hh;y<=hh;y++)for(let x=-hw;x<=hw;x++){if((x*x)/(hw*hw)+(y*y)/(hh*hh)<=1)ttSetG(px+x,py+y,0.87);}
+  for(let y=-hh;y<=hh;y++)for(let x=-hw;x<=hw;x++){if((x*x)/(hw*hw)+(y*y)/(hh*hh)<=1){const edge=-3*s+Math.sin(y*0.25)*5*s+Math.sin(y*0.7)*2*s;if(x>edge)ttSetG(px+x,py+y,0.1);}}
+  ttEll(px+16*s,py-8*s,4*s,3*s,0.45);ttEll(px+10*s,py+8*s,3*s,3*s,0.4);ttEll(px-14*s,py+6*s,3*s,2.5*s,0.55);ttEll(px+6*s,py-14*s,3*s,2.5*s,0.5);
+  for(let y=2*s;y<26*s;y++){const t=(y-2*s)/(24*s),w=(13-t*5)*s;for(let x=-w;x<w;x++){const edge=-2*s+Math.sin(y*0.3)*3*s;ttSetG(px+x,py+y,x>edge?0.35:0.87);}}
+  ttEll(px,py+25*s,6.5*s,4.5*s,0.07);ttEll(px+2*s,py+24*s,2*s,1.6*s,0.5);ttSetG(px-2.5*s,py+26*s,0.02);ttSetG(px+2.5*s,py+26*s,0.02);
+  for(let x=-7*s;x<7*s;x++)ttSetG(px+x,py+30*s+Math.abs(x)*0.12,0.18);
+  ttEll(px,py+33*s,3*s,4*s,0.25);
+  // 双蓝眼(亮点)
+  ttEll(px-13*s,py-2*s,5.5*s,4*s,0.92);ttEll(px-13*s,py-2*s,3.2*s,3.2*s,0.95);ttEll(px-13*s,py-2*s,1.6*s,1.6*s,0.02);ttSetG(px-14*s,py-3*s,0.98);
+  ttEll(px+13*s,py-2*s,5.5*s,4*s,0.92);ttEll(px+13*s,py-2*s,3.2*s,3.2*s,0.95);ttEll(px+13*s,py-2*s,1.6*s,1.6*s,0.02);ttSetG(px+12*s,py-3*s,0.98);
+}
+function ttScene(){
+  ttClear();ttBreathe+=0.03;const bob=Math.sin(ttBreathe)*1.5;
+  ttRect(0,0,ttW,ttH,1);ttRect(0,0,ttW,Math.floor(ttH*0.62),0.86);ttRect(0,Math.floor(ttH*0.62),ttW,ttH-Math.floor(ttH*0.62),0.7);
+  const cx0=ttW/2,baseY=ttH*0.46,s=Math.max(0.7,ttW/620);
+  ttEll(cx0,ttH*0.74,ttW*0.40,ttH*0.15,0.25);ttEll(cx0,ttH*0.73,ttW*0.38,ttH*0.13,0.72);
+  ttRect(cx0-90*s,baseY-110*s,180*s,95*s,0.18);
+  ttLine(cx0,baseY-95*s,cx0+15*s,baseY-72*s,0.5);ttLine(cx0+15*s,baseY-72*s,cx0,baseY-50*s,0.5);ttLine(cx0,baseY-50*s,cx0-15*s,baseY-72*s,0.5);ttLine(cx0-15*s,baseY-72*s,cx0,baseY-95*s,0.5);
+  ttDog(cx0,baseY-72*s+bob,s*0.95);
+  ttBust(cx0-ttW*0.27,baseY+34*s+Math.sin(ttBreathe+1)*1.5,s*0.95,{hat:true,face:'round',hair:'none'});
+  ttBust(cx0+ttW*0.27,baseY+34*s+Math.sin(ttBreathe+2)*1.5,s*0.95,{face:'long',hair:'parted',beard:true});
+  ttBust(cx0-ttW*0.14,ttH*1.02+bob,s*1.05,{back:true,hair:'bun'});
+  ttBust(cx0+ttW*0.14,ttH*1.02+Math.sin(ttBreathe+1.5)*1.5,s*1.05,{back:true});
+  const fy=ttH*0.66;ttRect(cx0-ttW*0.18,fy,3,16,0.1);ttEll(cx0-ttW*0.18,fy-6,4,9,0.15,true);
+  ttRect(cx0+ttW*0.08,fy+6,9,9,0.85);ttSetG(cx0+ttW*0.08+2,fy+8,0.05,true);ttSetG(cx0+ttW*0.08+6,fy+12,0.05);
+  // 纸
+  const pw=Math.floor(ttW*0.10),ph=Math.floor(pw*0.66),ppx=Math.floor(ttW*0.60),ppy=Math.floor(ttH*0.70);
+  ttPaperBox={x:ppx,y:ppy,w:pw,h:ph};
+  ttRect(ppx,ppy,pw,ph,0.95);
+  for(let x=0;x<pw;x++){ttSetG(ppx+x,ppy,0.05);ttSetG(ppx+x,ppy+ph,0.05);}for(let y=0;y<ph;y++){ttSetG(ppx,ppy+y,0.05);ttSetG(ppx+pw,ppy+y,0.05);}
+  ttLine(ppx+6,ppy+10,ppx+pw-20,ppy+10,0.2);ttLine(ppx+6,ppy+18,ppx+pw-8,ppy+18,0.35);ttLine(ppx+6,ppy+26,ppx+pw-26,ppy+26,0.35);
+  if(ttPaperActive){ttPaperGlow+=0.06;const g=0.3+0.4*Math.abs(Math.sin(ttPaperGlow));for(let x=-2;x<pw+2;x++){ttSetG(ppx+x,ppy-2,1-g,true);ttSetG(ppx+x,ppy+ph+2,1-g,true);}for(let y=-2;y<ph+2;y++){ttSetG(ppx-2,ppy+y,1-g,true);ttSetG(ppx+pw+2,ppy+y,1-g,true);}}
+  // 暗角
+  for(let y=0;y<ttH;y++)for(let x=0;x<ttW;x++){const dx=(x-ttW/2)/(ttW/2),dy=(y-ttH/2)/(ttH/2),r=dx*dx+dy*dy;if(r>0.5)ttGray[y*ttW+x]*=(1-(r-0.5)*0.8);}
+  ttFlush();
+}
+function ttLoop(){ttScene();ttRAF=requestAnimationFrame(ttLoop);}
+
+// 对话
+let ttTyping=false;
+function ttWait(ms){return new Promise(r=>setTimeout(r,ms));}
+function ttTypeLine(who,text){return new Promise(resolve=>{
+  const txtEl=document.getElementById('tt-txt'),whoEl=document.getElementById('tt-who'),advEl=document.getElementById('tt-adv');
+  whoEl.textContent=who;txtEl.textContent='';ttTyping=true;advEl.style.display='none';let i=0;
+  (async()=>{while(i<text.length){if(!ttTyping){txtEl.textContent=text;break;}txtEl.textContent+=text[i];i++;let d=32+Math.random()*28;const c=text[i-1];if('。，」；—'.includes(c))d+=140;await ttWait(d);}
+    ttTyping=false;advEl.style.display='block';
+    const cont=()=>{document.removeEventListener('click',oc);document.removeEventListener('keydown',ok);resolve();};
+    const oc=()=>{if(ttTyping){ttTyping=false;txtEl.textContent=text;}else cont();};
+    const ok=(e)=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();if(ttTyping){ttTyping=false;txtEl.textContent=text;}else cont();}};
+    document.addEventListener('click',oc);document.addEventListener('keydown',ok);
+  })();
+});}
+async function ttIntro(){
+  const dbox=document.getElementById('tt-dbox');
+  await ttWait(900);dbox.classList.add('show');
+  await ttTypeLine('Captain',exL('（一只蓝眼睛的边牧从守密人屏风后探出头来。）','(A border collie with blue eyes pokes its head over the keeper screen.)'));
+  await ttTypeLine('Captain',exL('汪！我是 Captain，今晚的守密人。准备好了就出发吧。','Woof! I am Captain, your Keeper tonight. Ready when you are.'));
+  if(visitorName){await ttTypeLine('Captain',exL('你来了，'+visitorName+'。','There you are, '+visitorName+'.'));}
+  else{await ttAskName();}
+  await ttTypeLine('Captain',exL('桌上有张纸——翻开它，去看看我的桌面；或者闭上眼，自己走进去探索。','There is a paper on the table — open it to see my desktop, or close your eyes and go explore.'));
+  ttPaperActive=true;ttPlaceLabel();
+  document.getElementById('tt-choices').classList.add('show');
+}
+function ttAskName(){return new Promise(resolve=>{
+  const txtEl=document.getElementById('tt-txt'),advEl=document.getElementById('tt-adv'),row=document.getElementById('tt-nameRow');
+  document.getElementById('tt-who').textContent='Captain';txtEl.textContent=exL('在名册上留个名字吧，调查员。','Sign your name in the register, investigator.');advEl.style.display='none';
+  row.style.display='block';const inp=document.getElementById('tt-nameIn');inp.value='';setTimeout(()=>inp.focus(),50);
+  let done=false;
+  // keydown 阶段就拦住 Enter,阻止它冒泡去触发对话推进监听
+  inp.addEventListener('keydown',function block(e){ if(e.key==='Enter'){e.preventDefault();e.stopPropagation();} },true);
+  inp.addEventListener('keyup',async function h(e){
+    if(e.key!=='Enter'||done)return;
+    e.preventDefault();e.stopPropagation();done=true;inp.removeEventListener('keyup',h);
+    const n=inp.value.trim();row.style.display='none';
+    if(n){visitorName=n;await ttTypeLine('Captain',exL(n+'。记下了。',n+'. Got it.'));}
+    else{await ttTypeLine('Captain',exL('不留名也好。那就出发吧。','No name? That works too. Off we go.'));}
+    resolve();
+  });
+});}
+function ttPlaceLabel(){const r=ttCv.getBoundingClientRect(),sx=r.width/ttW,sy=r.height/ttH,label=document.getElementById('tt-label');label.style.left=(r.left+(ttPaperBox.x+ttPaperBox.w/2)*sx-50)+'px';label.style.top=(r.top+ttPaperBox.y*sy-40)+'px';}
+function ttHover(e){if(!ttPaperActive)return;const r=ttCv.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width*ttW,my=(e.clientY-r.top)/r.height*ttH;const inP=mx>=ttPaperBox.x&&mx<=ttPaperBox.x+ttPaperBox.w&&my>=ttPaperBox.y&&my<=ttPaperBox.y+ttPaperBox.h;document.getElementById('tt-label').classList.toggle('show',inP);ttCv.style.cursor=inP?'pointer':'default';}
+function ttClick(e){if(!ttPaperActive)return;const r=ttCv.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width*ttW,my=(e.clientY-r.top)/r.height*ttH;if(mx>=ttPaperBox.x&&mx<=ttPaperBox.x+ttPaperBox.w&&my>=ttPaperBox.y&&my<=ttPaperBox.y+ttPaperBox.h)ttGoDesktop();}
+function ttCleanup(){if(ttRAF)cancelAnimationFrame(ttRAF);ttRAF=null;removeEventListener('resize',ttResize);}
+function ttGoDesktop(){
+  document.getElementById('tt-choices').classList.remove('show');document.getElementById('tt-dbox').classList.remove('show');document.getElementById('tt-label').classList.remove('show');
+  const f=document.getElementById('tt-fade');f.classList.remove('gone');
+  setTimeout(()=>{ttCleanup();document.getElementById('tabletop').style.display='none';launchDesktop();},1100);
+}
+function ttGoExplore(){
+  document.getElementById('tt-choices').classList.remove('show');document.getElementById('tt-dbox').classList.remove('show');document.getElementById('tt-label').classList.remove('show');
+  document.getElementById('tabletop').classList.add('closing');
+  setTimeout(()=>{ttCleanup();document.getElementById('tabletop').classList.remove('closing');document.getElementById('tabletop').style.display='none';launchApartment();},1100);
+}
+
+// ── 公寓探索 ──
+let apCv,apCx,apW,apH,apRAF=null;
+let apPosX=2.5,apPosY=2.5,apDir=0,apTgtX=2.5,apTgtY=2.5,apTargetDir=0;
+const apFOV=Math.PI/2.6;let apWinOpen=false,apNear=null,apTrail=[],apZ,apGlow=0,apCapT=0;
+const AP_MAP=[[1,1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,1,0,0,0,0,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1],[1,1,0,1,1,1,1,1,0,1,1,1],[1,0,0,0,0,0,1,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,1,0,0,0,0,1],[1,0,0,0,0,0,1,0,0,0,0,1],[1,0,0,0,0,0,1,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1]];
+const AP_MH=AP_MAP.length,AP_MW=AP_MAP[0].length;
+const AP_ITEMS=[{x:8.5,y:1.6,id:'about',spr:'frame'},{x:9.5,y:3.5,id:'portfolio',spr:'gramo'},{x:2.0,y:9.5,id:'research',spr:'shelf'},{x:9.0,y:9.5,id:'blog',spr:'typer'}];
+const AP_SPR={frame:['XXXXXXXXX','XooooooooX'.slice(0,9),'XoXXXXXoX','XoXoooXoX','XoXoXoXoX','XoXoooXoX','XoXXXXXoX','XooooooooX'.slice(0,9),'XXXXXXXXX'],gramo:['......rrrr','....rrXXXXr','..rrXXXXXXr'.slice(0,10),'rrXXXXXX...','..XXXX.....','...XX......','..XXXX.....','.XXXXXX....','XXXXXXXX...','XoXXXXoX...'],shelf:['XXXXXXXXXX','XrXoXrXoXX','XrXoXrXoXX','XXXXXXXXXX','XoXrXoXrXX','XoXrXoXrXX','XXXXXXXXXX','XrXoXoXrXX','XrXoXoXrXX','XXXXXXXXXX'],typer:['...oo.....','..oooo....','.XXXXXX...','XXXXXXXX..','XrXXXXrX..','XXXXXXXX..','XXoooooXX.','XXXXXXXXX.','.XXXXXXX..','..XXXXX...']};
+const AP_DOG=['..XX....XX','..XXX..XXX','...XXXXXX.','..obXXXXb.','.ooXXXXXXX','.oooXXXXXX','..ooXXXX..','...XXXX...','..XXXXXX..','.XX.XX.XX.'];
+
+function launchApartment(){
+  // 确保桌面残留状态清干净
+  document.getElementById('desktop').classList.remove('on','overlay-mode');
+  const ap=document.getElementById('apt');ap.style.display='block';
+  apCv=document.getElementById('apt-cv');apCx=apCv.getContext('2d');
+  document.getElementById('apt-hud').textContent=exL('↑↓ 前进 / 后退 · ←→ 转身 · 走近物品点击打开','Up/Down move · Left/Right turn · walk up and click to open');
+  document.getElementById('apt-exit').textContent=exL('▸ 翻开桌面','▸ open desktop');
+  apResize();addEventListener('resize',apResize);
+  apPosX=2.5;apPosY=2.5;apDir=0;apTgtX=2.5;apTgtY=2.5;apTargetDir=0;apTrail=[{x:apPosX,y:apPosY}];apWinOpen=false;
+  addEventListener('keydown',apKey);addEventListener('keyup',apKeyUp);apCv.onclick=()=>{if(apNear&&!apWinOpen)apOpenWin(apNear.id);};
+  if(apRAF)cancelAnimationFrame(apRAF);apLoop();
+  setTimeout(()=>document.getElementById('apt-fade').classList.add('gone'),120);
+}
+function apResize(){apW=Math.floor(innerWidth/4);apH=Math.floor(innerHeight/4);apCv.width=apW;apCv.height=apH;apCx.imageSmoothingEnabled=false;}
+function apIsWall(x,y){const mx=x|0,my=y|0;if(my<0||my>=AP_MH||mx<0||mx>=AP_MW)return true;return AP_MAP[my][mx]>0;}
+function apMoving(){return Math.abs(apPosX-apTgtX)>0.01||Math.abs(apPosY-apTgtY)>0.01;}
+function apTurning(){return Math.abs(apDir-apTargetDir)>0.01;}
+function apStep(sign){if(apMoving()||apTurning())return;const fx=Math.round(Math.cos(apDir)),fy=Math.round(Math.sin(apDir));const nx=Math.round(apTgtX-0.5)+0.5+fx*sign,ny=Math.round(apTgtY-0.5)+0.5+fy*sign;if(!apIsWall(nx,ny)){apTgtX=nx;apTgtY=ny;}}
+function apKey(e){
+  if(document.getElementById('apt').style.display==='none')return;
+  if(e.key==='Escape'){apCloseWin();return;}
+  if(e.key==='Enter'&&apNear&&!apWinOpen){apOpenWin(apNear.id);e.preventDefault();return;}
+  if(!apWinOpen){
+    if(e.key==='ArrowLeft'&&!apTurning()&&!apMoving()){apTargetDir-=Math.PI/2;e.preventDefault();}
+    if(e.key==='ArrowRight'&&!apTurning()&&!apMoving()){apTargetDir+=Math.PI/2;e.preventDefault();}
+    if(e.key==='ArrowUp'){apStep(1);e.preventDefault();}
+    if(e.key==='ArrowDown'){apStep(-1);e.preventDefault();}
+  }
+}
+function apKeyUp(e){}
+function apOpenWin(id){
+  // 复用主站真实窗口,浮在公寓之上
+  const item=DESK_ITEMS.find(d=>d.id===id);
+  if(!item)return;
+  apWinOpen=true;
+  // 让桌面"开启"但透明:只显示窗口,不显示桌面背景/图标/任务栏
+  const desk=document.getElementById('desktop');
+  desk.classList.add('on','overlay-mode');
+  openWindow(item);
+}
+function apCloseWin(){apWinOpen=false;}
+function apUpdate(){
+  let dd=apTargetDir-apDir;apDir+=dd*0.22;if(Math.abs(dd)<0.01)apDir=apTargetDir;
+  const ox=apPosX,oy=apPosY;apPosX+=(apTgtX-apPosX)*0.28;apPosY+=(apTgtY-apPosY)*0.28;
+  if(Math.abs(apTgtX-apPosX)<0.01)apPosX=apTgtX;if(Math.abs(apTgtY-apPosY)<0.01)apPosY=apTgtY;
+  if(Math.hypot(apPosX-ox,apPosY-oy)>0.02){const last=apTrail[apTrail.length-1];if(Math.hypot(apPosX-last.x,apPosY-last.y)>0.25){apTrail.push({x:apPosX,y:apPosY});if(apTrail.length>40)apTrail.shift();}}
+  apNear=null;let best=1.6;for(const it of AP_ITEMS){const d=Math.hypot(it.x-apPosX,it.y-apPosY);if(d<best){best=d;apNear=it;}}
+  const tip=document.getElementById('apt-tip');
+  if(apNear&&!apWinOpen){const it=DESK_ITEMS.find(d=>d.id===apNear.id);tip.innerHTML=exL('走近 · ','near · ')+'<b>'+(it?t(it.labelKey):apNear.id)+'</b>';tip.classList.add('show');}else tip.classList.remove('show');
+}
+function apRender(){
+  const img=apCx.createImageData(apW,apH),d=img.data;apZ=new Float32Array(apW).fill(99);
+  for(let y=0;y<apH;y++)for(let x=0;x<apW;x++){let g=y<apH/2?0.8+(y/(apH/2))*0.1:0.72-((y-apH/2)/(apH/2))*0.14;const dark=g<EX.BAYER[y&7][x&7]/64;const c=dark?EX.INK:EX.PAPER,o=(y*apW+x)*4;d[o]=c[0];d[o+1]=c[1];d[o+2]=c[2];d[o+3]=255;}
+  for(let x=0;x<apW;x++){
+    const camX=2*x/apW-1,ang=apDir+Math.atan(camX*Math.tan(apFOV/2)),rdx=Math.cos(ang),rdy=Math.sin(ang);
+    let mx=apPosX|0,my=apPosY|0;const ddx=Math.abs(1/rdx),ddy=Math.abs(1/rdy);let sx,sy,stx,sty;
+    if(rdx<0){stx=-1;sx=(apPosX-mx)*ddx;}else{stx=1;sx=(mx+1-apPosX)*ddx;}
+    if(rdy<0){sty=-1;sy=(apPosY-my)*ddy;}else{sty=1;sy=(my+1-apPosY)*ddy;}
+    let side=0,hit=0;for(let n=0;n<28&&!hit;n++){if(sx<sy){sx+=ddx;mx+=stx;side=0;}else{sy+=ddy;my+=sty;side=1;}if(apIsWall(mx,my))hit=1;}
+    let dist=side===0?sx-ddx:sy-ddy;if(dist<0.05)dist=0.05;apZ[x]=dist;
+    const lh=Math.floor(apH/dist);let y0=Math.floor(apH/2-lh/2),y1=Math.floor(apH/2+lh/2);const cy0=y0,cy1=y1;if(y0<0)y0=0;if(y1>=apH)y1=apH-1;
+    let shade=1-Math.min(dist/8,0.72);if(side===1)shade*=0.72;
+    for(let y=y0;y<=y1;y++){if(shade>EX.BAYER[y&7][x&7]/64){const o=(y*apW+x)*4;d[o]=EX.INK[0];d[o+1]=EX.INK[1];d[o+2]=EX.INK[2];}}
+    if(cy0>0&&cy0<apH){const o=(cy0*apW+x)*4;d[o]=EX.INK[0];d[o+1]=EX.INK[1];d[o+2]=EX.INK[2];}
+    if(cy1>0&&cy1<apH){const o=(cy1*apW+x)*4;d[o]=EX.INK[0];d[o+1]=EX.INK[1];d[o+2]=EX.INK[2];}
+  }
+  apCx.putImageData(img,0,0);apDrawItems();apDrawCaptain();
+}
+function apDrawItems(){
+  apGlow+=0.06;const sorted=AP_ITEMS.map(it=>({it,d:Math.hypot(it.x-apPosX,it.y-apPosY)})).sort((a,b)=>b.d-a.d);
+  for(const {it,d} of sorted){const dx=it.x-apPosX,dy=it.y-apPosY;let a=Math.atan2(dy,dx)-apDir;while(a<-Math.PI)a+=2*Math.PI;while(a>Math.PI)a-=2*Math.PI;if(Math.abs(a)>apFOV/2+0.35)continue;const sx=Math.floor((0.5+a/apFOV)*apW);if(sx<0||sx>=apW)continue;if(d>=apZ[sx]+0.3)continue;const scale=Math.max(1,Math.floor(apH/d*0.04)),sy=Math.floor(apH/2+apH/d*0.16);apDrawSpr(AP_SPR[it.spr],sx,sy,scale,it===apNear);}
+}
+function apDrawSpr(pat,cxp,cyp,u,near){const rows=pat.length,cols=pat[0].length,ox=cxp-(cols*u)/2,oy=cyp-(rows*u);if(near){apCx.strokeStyle='rgba(150,58,50,'+(0.5+0.4*Math.abs(Math.sin(apGlow)))+')';apCx.lineWidth=Math.max(1,u);apCx.strokeRect(ox-u,oy-u,cols*u+2*u,rows*u+2*u);}for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const ch=pat[r][c];if(!ch||ch==='.')continue;let col=ch==='X'?EX.INK:ch==='o'?EX.PAPER:ch==='r'?EX.RED:EX.INK;apCx.fillStyle='rgb('+col[0]+','+col[1]+','+col[2]+')';apCx.fillRect((ox+c*u)|0,(oy+r*u)|0,u,u);}}
+function apDrawCaptain(){
+  apCapT++;const bob=Math.sin(apCapT*0.08)*2,u=Math.max(2,Math.floor(apW/100)),cxp=apW*0.5,cyp=apH-2+bob,rows=AP_DOG.length,cols=AP_DOG[0].length,ox=cxp-(cols*u)/2,oy=cyp-rows*u;
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const ch=AP_DOG[r][c];if(!ch||ch==='.')continue;let col=ch==='X'?EX.INK:(ch==='o'||ch==='b')?EX.PAPER:EX.INK;apCx.fillStyle='rgb('+col[0]+','+col[1]+','+col[2]+')';apCx.fillRect((ox+c*u)|0,(oy+r*u)|0,u,u);}
+  const tw=Math.sin(apCapT*0.2)>0?0:1;apCx.fillStyle='rgb('+EX.INK[0]+','+EX.INK[1]+','+EX.INK[2]+')';apCx.fillRect((ox-u)|0,(oy+(4+tw)*u)|0,u,u);
+}
+function apLoop(){apUpdate();apRender();apRAF=requestAnimationFrame(apLoop);}
+function exploreToDesktop(){
+  const f=document.getElementById('apt-fade');f.classList.remove('gone');
+  setTimeout(()=>{if(apRAF)cancelAnimationFrame(apRAF);apRAF=null;removeEventListener('resize',apResize);removeEventListener('keydown',apKey);removeEventListener('keyup',apKeyUp);document.getElementById('apt').style.display='none';launchDesktop();},1000);
+}
+
+// 终端命令切换:从任意界面进桌面/探索
+function hideAllScreens(){
+  // 关掉终端窗口
+  if(openWindows['__term']){openWindows['__term'].remove();delete openWindows['__term'];termOpen=false;}
+  // 隐藏 boot 页
+  const page=document.getElementById('page');if(page){page.style.display='none';}
+  // 隐藏跑团桌
+  if(ttRAF){cancelAnimationFrame(ttRAF);ttRAF=null;}removeEventListener('resize',ttResize);document.getElementById('tabletop').style.display='none';
+  // 隐藏公寓
+  if(apRAF){cancelAnimationFrame(apRAF);apRAF=null;}removeEventListener('resize',apResize);removeEventListener('keydown',apKey);removeEventListener('keyup',apKeyUp);document.getElementById('apt').style.display='none';
+}
+function closeTerminalToDesktop(){
+  hideAllScreens();
+  const desk=document.getElementById('desktop');
+  if(desk.classList.contains('on')){ /* 已在桌面,只是关了终端 */ }
+  else { launchDesktop(); }
+}
+function closeTerminalToExplore(){
+  hideAllScreens();
+  document.getElementById('desktop').classList.remove('on');
+  const ap=document.getElementById('apt');
+  if(ap.style.display==='block'){ /* 已在探索 */ }
+  else { launchApartment(); }
 }
 
 boot();
