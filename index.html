@@ -354,6 +354,18 @@ body::after{
 }
 .win-body a:hover{border-bottom-color:#963a32}
 
+/* ── 作品窗口标签 ── */
+.pf-tabs{display:flex;gap:4px;margin-bottom:12px;border-bottom:1px solid rgba(42,37,34,.2);padding-bottom:8px}
+.pf-tab{
+  font-family:inherit;font-size:13px;letter-spacing:.04em;
+  background:transparent;border:1px solid rgba(42,37,34,.25);
+  color:rgba(42,37,34,.6);padding:5px 14px;border-radius:3px;cursor:pointer;
+  transition:all .12s;
+}
+.pf-tab:hover{background:rgba(42,37,34,.06)}
+.pf-tab.active{background:rgba(42,37,34,.13);color:#1a1612;border-color:rgba(42,37,34,.45)}
+.pf-content{display:flex;flex-direction:column}
+
 /* ── 自定义纸质播放器 ── */
 .player-loading{color:rgba(42,37,34,.5);font-style:italic;padding:20px 0}
 .player-root{display:flex;flex-direction:column;height:100%}
@@ -501,6 +513,7 @@ let paused = false;         // 动画是否暂停(菜单打开时)
 // ── 双语 ──
 let lang = 'en';            // 'en' | 'zh' — 由开机时的语言选择决定
 let langSelecting = false;  // 正在选语言时,Enter 不开 boot 菜单
+let visitorName = '';       // 访客/调查员名字 — 跨 boot/桌面/探索 共享,本次会话保留
 const T = {
   // 名字
   name:        { en: 'xiaoqi',          zh: '小淇' },
@@ -533,12 +546,17 @@ const T = {
   comingTerminal:{ en: '[ terminal — coming soon ]', zh: '[ 终端 — 还没做完 ]' },
   // 桌面 — 图标名
   icoProjects: { en: 'projects', zh: '项目' },
-  icoPapers:   { en: 'papers',   zh: '论文' },
+  icoResearch: { en: 'research', zh: '研究' },
   icoMusic:    { en: 'music',    zh: '音乐' },
   icoFiction:  { en: 'fiction',  zh: '小说' },
   icoBlog:     { en: 'blog',     zh: '博客' },
   icoAbout:    { en: 'about',    zh: '关于' },
   icoCV:       { en: 'cv',       zh: '简历' },
+  icoPortfolio:{ en: 'portfolio', zh: '作品' },
+  pfGames:     { en: 'games',   zh: '游戏' },
+  pfMusic:     { en: 'music',   zh: '音乐' },
+  pfCode:      { en: 'open source', zh: '开源' },
+  pfWriting:   { en: 'writing', zh: '写作' },
   // 桌面 — 杂项
   deskHint:    { en: 'double-click to open', zh: '双击打开' },
   menuTerminal:{ en: 'terminal', zh: '终端' },
@@ -916,6 +934,7 @@ async function boot() {
     cmd.removeEventListener('keydown', handler);
     
     const name = cmd.value.trim();
+    if (name) visitorName = name;   // 存全局,供桌面/探索继承
     inputWrap.style.display = 'none';
     cursor.style.display = 'inline-block';
     
@@ -1140,22 +1159,21 @@ document.addEventListener('click', () => {
 // 极简线描图标 (墨线风,配合纸质美学)
 const ICO = {
   projects: '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><rect x="6" y="11" width="28" height="22" rx="1.5"/><path d="M6 16h28M14 11V8h12v3"/></svg>',
-  papers:   '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><path d="M11 6h13l5 5v23H11z"/><path d="M24 6v5h5M15 19h10M15 24h10M15 29h7"/></svg>',
+  research: '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><path d="M11 6h13l5 5v23H11z"/><path d="M24 6v5h5M15 19h10M15 24h10M15 29h7"/></svg>',
   music:    '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><path d="M16 26V11l13-3v15"/><circle cx="13" cy="27" r="3.2"/><circle cx="26" cy="23" r="3.2"/></svg>',
   fiction:  '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><path d="M8 9h11a3 3 0 013 3v20a3 3 0 00-3-3H8z"/><path d="M32 9H21a3 3 0 00-3 3v20a3 3 0 013-3h11z"/></svg>',
   blog:     '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><rect x="7" y="8" width="26" height="24" rx="1.5"/><path d="M12 15h16M12 20h16M12 25h10"/></svg>',
   about:    '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><circle cx="20" cy="20" r="13"/><path d="M20 18v8" stroke-linecap="round"/><circle cx="20" cy="13.5" r="1.2" fill="#1a1612" stroke="none"/></svg>',
-  cv:       '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><rect x="9" y="6" width="22" height="28" rx="1.5"/><circle cx="20" cy="15" r="3.5"/><path d="M14 25c0-3 2.7-5 6-5s6 2 6 5"/></svg>'
+  cv:       '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><rect x="9" y="6" width="22" height="28" rx="1.5"/><circle cx="20" cy="15" r="3.5"/><path d="M14 25c0-3 2.7-5 6-5s6 2 6 5"/></svg>',
+  portfolio:'<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><path d="M6 13h11l3 3h14v17H6z"/><path d="M6 13V9h9l2 3"/></svg>'
 };
 
 const DESK_ITEMS = [
-  { id: 'about',    labelKey: 'icoAbout' },
-  { id: 'cv',       labelKey: 'icoCV' },
-  { id: 'projects', labelKey: 'icoProjects' },
-  { id: 'papers',   labelKey: 'icoPapers' },
-  { id: 'music',    labelKey: 'icoMusic' },
-  { id: 'fiction',  labelKey: 'icoFiction' },
-  { id: 'blog',     labelKey: 'icoBlog' }
+  { id: 'about',     labelKey: 'icoAbout' },
+  { id: 'cv',        labelKey: 'icoCV' },
+  { id: 'portfolio', labelKey: 'icoPortfolio' },
+  { id: 'research',  labelKey: 'icoResearch' },
+  { id: 'blog',      labelKey: 'icoBlog' }
 ];
 
 let winZ = 10;
@@ -1201,6 +1219,19 @@ function buildDeskIcons() {
 function winContent(id) {
   const zh = lang === 'zh';
   const E = '<a target="_blank" rel="noopener" ';  // 外链前缀
+
+  if (id === 'portfolio') {
+    // 作品窗口:内部三标签 games/music/writing,内容由 mountPortfolioTab 填充
+    return (
+      '<div class="pf-tabs">' +
+        '<button class="pf-tab active" data-pf="games">' + t('pfGames') + '</button>' +
+        '<button class="pf-tab" data-pf="music">' + t('pfMusic') + '</button>' +
+        '<button class="pf-tab" data-pf="code">' + t('pfCode') + '</button>' +
+        '<button class="pf-tab" data-pf="writing">' + t('pfWriting') + '</button>' +
+      '</div>' +
+      '<div class="pf-content" id="pf-content"></div>'
+    );
+  }
   if (id === 'about') {
     const links =
       '<hr style="border:none;border-top:1px dashed rgba(42,37,34,.2);margin:12px 0">' +
@@ -1250,24 +1281,21 @@ function winContent(id) {
   if (id === 'projects') {
     const P = 'https://zjnbwxq.github.io/Xiaoqi-Weng.github.io//portfolio/';
     return (
-      '<p style="margin-bottom:10px">' + (zh?'<b>当前项目</b>':'<b>current</b>') + '</p>' +
-      '<p>🎮 <b>Be My Guest — CrossOver</b> — ' + (zh?'2D RPG 卡牌游戏(团队项目)。':'a 2D RPG card game (team project).') +
-      ' ' + E + 'href="https://gjmxcrossover.itch.io/bemyguest">itch ↗</a> · ' +
-      E + 'href="' + P + 'portfolio-6/">' + (zh?'详情':'detail') + ' ↗</a></p>' +
+      '<p style="margin-bottom:10px"><b>' + (zh?'正在做':'current') + '</b></p>' +
       '<p>🎯 ' + (zh
-        ? '正在筹备一个为视障人群设计的<b>无屏沉浸式角色扮演游戏</b>,寻找志同道合的音频伙伴。'
-        : 'Building a <b>screenless immersive RPG</b> for the visually impaired — looking for like-minded audio folk.') + '</p>' +
+        ? '正在筹备一个为视障人群设计的<b>无屏沉浸式角色扮演游戏</b>，在找志同道合的音频伙伴一起做。'
+        : 'Building a <b>screenless immersive RPG</b> for the visually impaired — looking for like-minded audio folk to join.') + '</p>' +
       '<hr style="border:none;border-top:1px dashed rgba(42,37,34,.2);margin:12px 0">' +
-      '<p style="margin-bottom:8px"><b>' + (zh?'作品集':'portfolio') + '</b></p>' +
-      '<p>🎭 <b>Yunnan Don\'t Have Ocean</b> — ' + (zh?'一场互动表演。':'an interactive performance.') +
-      ' ' + E + 'href="' + P + 'portfolio-1/">↗</a></p>' +
-      '<p>🌸 <b>Pink Hair</b> — ' + (zh?'纪念我的朋友灵华。':'to remember my friend Linghua.') +
-      ' ' + E + 'href="' + P + 'portfolio-5/">↗</a></p>' +
+      '<p style="margin-bottom:8px">🎧 <b>' + (zh?'游戏音频':'Game Audio') + '</b> · ' + (zh?'4 年，主要做 2D 游戏':'4 yrs, mostly 2D games') + '</p>' +
+      '<p><b>Be My Guest</b> — ' + (zh?'2D RPG 卡牌游戏。音效 · 作曲 · 剧本。':'2D RPG card game. SFX · composer · writer.') +
+      ' ' + E + 'href="https://gjmxcrossover.itch.io/bemyguest">itch ↗</a></p>' +
+      '<p><b>Girl\'s Wonderful Journey</b> — ' + (zh?'音效 · 作曲。':'SFX · composer.') + ' ' + E + 'href="https://www.gcores.com/games/125872">↗</a></p>' +
+      '<p><b>Relignition</b> — ' + (zh?'音效 · 作曲。':'SFX · composer.') + ' ' + E + 'href="https://www.gcores.com/games/105435">↗</a></p>' +
+      '<p><b>Listen</b> — ' + (zh?'音效 · 作曲。':'SFX · composer.') + ' ' + E + 'href="https://wanghai9963.itch.io/listen">↗</a></p>' +
       '<hr style="border:none;border-top:1px dashed rgba(42,37,34,.2);margin:12px 0">' +
-      '<p style="margin-bottom:8px">🎮 <b>' + (zh?'游戏音频':'game audio') + '</b> — ' + (zh?'4 年,主要做 2D 游戏':'4 years, mostly 2D games') + '</p>' +
-      '<p>' + E + 'href="https://www.gcores.com/games/125872">Girl\'s Wonderful Journey ↗</a></p>' +
-      '<p>' + E + 'href="https://www.gcores.com/games/105435">Relignition ↗</a></p>' +
-      '<p>' + E + 'href="https://wanghai9963.itch.io/listen">Listen ↗</a></p>'
+      '<p style="margin-bottom:8px">🎭 <b>' + (zh?'互动表演':'Interactive') + '</b></p>' +
+      '<p><b>Yunnan Don\'t Have Ocean</b> — ' +
+      E + 'href="https://www.youtube.com/embed/zwkSo5Sl8Ds">' + (zh?'视频':'video') + ' ↗</a></p>'
     );
   }
   if (id === 'music') {
@@ -1278,33 +1306,65 @@ function winContent(id) {
   }
   if (id === 'fiction') {
     return (
-      '<p>📖 <b>' + (zh?'写小说 · 18 年':'novel writing · 18 years') + '</b> 🤣</p>' +
+      '<p>📖 <b>' + (zh?'写作':'writing') + '</b></p>' +
       '<p style="margin-top:10px"><b>' + (zh?'《莫日更集》':'Morigen Collection') + '</b> — ' + (zh?'已在 Apple Books 出版。':'published on Apple Books.') +
       ' ' + E + 'href="https://books.apple.com/gb/book/%E8%8E%AB%E6%97%A5%E6%9B%B4%E9%9B%86/id6498863205">↗</a></p>' +
       '<p style="margin-top:8px"><b>' + (zh?'《我在异世界开发的动植物的一万种用法》':'Ten Thousand Uses of Plants and Animals I Develop in Another World') + '</b> — ' +
       (zh?'连载中。':'ongoing.') + ' ' + E + 'href="https://fanqienovel.com/page/7289285570956626959">↗</a></p>'
     );
   }
-  if (id === 'papers') {
+  if (id === 'code') {
+    const G = 'https://github.com/zjnbwxq/';
     return (
-      '<p>👨🏻‍🔬 <b>' + (zh?'研究':'research') + '</b></p>' +
-      '<p style="margin-top:8px">' + (zh
-        ? '在皇家伯明翰音乐学院,师从 <b>Lamberto Coccioli</b> 教授,研究《DSP 动态范围压缩器的用户界面设计及其对用户体验的影响》。'
-        : 'At RBC, under Prof. <b>Lamberto Coccioli</b>: "User Interface Design of DSP Dynamic Range Compression Processors and Their Impact on User Experience."') + '</p>' +
-      '<p style="margin-top:8px">' + (zh
-        ? '论文已被《Academic Journal of Humanities & Social Sciences》接收。'
-        : 'Accepted by the Academic Journal of Humanities & Social Sciences.') + '</p>' +
-      '<p style="margin-top:10px">' + E + 'href="https://scholar.google.com/citations?user=nr3E6yYAAAAJ&hl">Google Scholar ↗</a></p>' +
-      '<p>' + E + 'href="https://orcid.org/0009-0002-5316-3025">ORCID ↗</a></p>'
+      '<p>💻 <b>' + (zh?'开源项目':'Open Source') + '</b></p>' +
+      '<p style="margin-top:8px"><b>' + E + 'href="' + G + 'Keymira">Keymira ↗</a></b> · Python<br>' +
+      '<span style="font-size:12px;color:rgba(42,37,34,.55)">' + (zh?'键盘可视化工具。':'a keyboard visualizer.') + '</span></p>' +
+      '<p style="margin-top:8px"><b>' + E + 'href="' + G + 'neuro-bot">neuro-bot ↗</a></b> · JavaScript / Vue<br>' +
+      '<span style="font-size:12px;color:rgba(42,37,34,.55)">' + (zh?'对话机器人。':'a chatbot.') + '</span></p>' +
+      '<p style="margin-top:8px"><b>' + E + 'href="' + G + 'InsightSummarizer">InsightSummarizer ↗</a></b> · Python<br>' +
+      '<span style="font-size:12px;color:rgba(42,37,34,.55)">' + (zh?'内容摘要工具。':'a summarizer.') + '</span></p>' +
+      '<p style="margin-top:8px"><b>' + E + 'href="' + G + 'simple-database">Simple Database ↗</a></b> · TypeScript<br>' +
+      '<span style="font-size:12px;color:rgba(42,37,34,.55)">' + (zh?'Obsidian 插件。':'an Obsidian plugin.') + '</span></p>' +
+      '<hr style="border:none;border-top:1px dashed rgba(42,37,34,.2);margin:12px 0">' +
+      '<p style="font-size:13px">' + (zh?'更多在 ':'More on ') +
+      E + 'href="https://github.com/zjnbwxq">GitHub ↗</a></p>'
+    );
+  }
+  if (id === 'research') {
+    return (
+      '<p>👨🏻‍🔬 <b>' + (zh?'研究方向':'Research Interests') + '</b></p>' +
+      '<p style="margin-top:6px">' + (zh
+        ? '交互式音乐 · 沉浸式音频技术 · 声学 · 心理声学 · 多模态机器学习 · 科学形而上学。'
+        : 'Interactive Music · Immersive Audio Technologies · Acoustics · Psychoacoustics · Multimodal ML · Scientific Metaphysics.') + '</p>' +
+      '<hr style="border:none;border-top:1px dashed rgba(42,37,34,.2);margin:12px 0">' +
+      '<p><b>' + (zh?'发表':'Publications') + '</b></p>' +
+      '<p style="margin-top:8px"><b>' + E + 'href="https://www.researchgate.net/publication/404732126_Active_Realism_A_Position-Oriented_Pragmatist_Metaphysics"><i>Active Realism: A Position-Oriented Pragmatist Metaphysics</i> ↗</a></b><br>' +
+      '<span style="font-size:11px;color:rgba(42,37,34,.5)">X. Weng · Bournemouth University · 2026</span></p>' +
+      '<p style="font-size:12px;color:rgba(42,37,34,.6);margin-top:4px">' + (zh
+        ? '提出"主动现实主义"，一种回应当代虚无主义的去伦理化、去目的论的复合实用主义。'
+        : 'A de-ethicized, de-teleologized composite pragmatism responding to contemporary nihilism.') + '</p>' +
+      '<p style="margin-top:10px"><b><i>User Interface Design of DSP Dynamic Range Compression Processors and Their Impact on User Experience</i></b><br>' +
+      '<span style="font-size:11px;color:rgba(42,37,34,.5)">Accepted · Academic Journal of Humanities & Social Sciences</span></p>' +
+      '<p style="font-size:12px;color:rgba(42,37,34,.6);margin-top:4px">' + (zh
+        ? '研究压缩器界面设计如何影响音频工具的可用性与用户体验。'
+        : 'How compressor UI design shapes usability and user experience in audio tools.') + '</p>' +
+      '<p style="margin-top:10px">' + E + 'href="https://scholar.google.com/citations?user=nr3E6yYAAAAJ&hl">Google Scholar ↗</a> · ' +
+      E + 'href="https://orcid.org/0009-0002-5316-3025">ORCID ↗</a></p>'
     );
   }
   if (id === 'blog') {
     return (
-      '<p>📚 <b>' + (zh?'科普内容':'educational content') + '</b></p>' +
-      '<p style="margin-top:8px">' + (zh?'在知乎写音乐技术科普:':'music tech writing on Zhihu:') +
-      ' ' + E + 'href="https://www.zhihu.com/people/mell-weng">' + (zh?'知乎':'Zhihu') + ' ↗</a></p>' +
-      '<p>' + (zh?'B 站翻译教学内容:':'translated tutorials on Bilibili:') +
-      ' ' + E + 'href="https://space.bilibili.com/18668917">' + (zh?'哔哩哔哩':'Bilibili') + ' ↗</a></p>'
+      '<p>📚 <b>' + (zh?'科普写作':'Writing') + '</b></p>' +
+      '<p style="font-size:13px;color:rgba(42,37,34,.6)">' + (zh?'音乐技术科普 · 教程翻译':'music tech & tutorials') + '</p>' +
+      '<hr style="border:none;border-top:1px dashed rgba(42,37,34,.2);margin:12px 0">' +
+      '<p style="margin-bottom:6px"><b>' + (zh?'精选':'Featured') + '</b></p>' +
+      '<p><b>' + E + 'href="https://zjnbwxq.github.io/Xiaoqi-Weng.github.io//posts/2019/12/blog-post-1/">Compressor Basics ↗</a></b><br>' +
+      '<span style="font-size:12px;color:rgba(42,37,34,.6)">' + (zh?'压缩器基础。':'a primer on compressors.') + ' ' +
+      E + 'href="https://zhuanlan.zhihu.com/p/95404957">' + (zh?'中文版':'中文 ↗') + '</a></span></p>' +
+      '<hr style="border:none;border-top:1px dashed rgba(42,37,34,.2);margin:12px 0">' +
+      '<p style="font-size:13px">' +
+      E + 'href="https://www.zhihu.com/people/mell-weng">' + (zh?'知乎':'Zhihu') + ' ↗</a> · ' +
+      E + 'href="https://space.bilibili.com/18668917">' + (zh?'哔哩哔哩':'Bilibili') + ' ↗</a></p>'
     );
   }
   return '<span class="win-empty">' + t('winEmpty') + '</span>';
@@ -1328,9 +1388,9 @@ function openWindow(item) {
   win.style.left = Math.max(20, baseX) + 'px';
   win.style.top  = Math.max(20, baseY) + 'px';
   // 播放器窗口默认大一点
-  if (item.id === 'music') {
-    win.style.width = '460px';
-    win.style.height = '440px';
+  if (item.id === 'music' || item.id === 'portfolio') {
+    win.style.width = '480px';
+    win.style.height = '460px';
   } else if (item.id === 'cv') {
     win.style.width = '440px';
     win.style.height = '420px';
@@ -1380,6 +1440,38 @@ function openWindow(item) {
 
   // 音乐窗口:加载播放器
   if (item.id === 'music') initPlayer(win);
+  if (item.id === 'portfolio') initPortfolio(win);
+}
+
+// 作品窗口:标签切换
+function initPortfolio(win) {
+  const tabs = win.querySelectorAll('.pf-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      tab.classList.add('active');
+      clickSound();
+      mountPortfolioTab(win, tab.dataset.pf);
+    });
+  });
+  mountPortfolioTab(win, 'games'); // 默认
+}
+
+function mountPortfolioTab(win, which) {
+  const box = win.querySelector('#pf-content');
+  if (!box) return;
+  if (which === 'games') {
+    box.innerHTML = winContent('projects');
+  } else if (which === 'writing') {
+    box.innerHTML = winContent('fiction');
+  } else if (which === 'code') {
+    box.innerHTML = winContent('code');
+  } else if (which === 'music') {
+    // 复用播放器:重建一个 player-root 然后 initPlayer
+    box.innerHTML = '<div class="player-root" id="player-root">' +
+      '<div class="player-loading">' + (lang==='zh'?'加载歌单…':'loading playlist…') + '</div></div>';
+    initPlayer(win);
+  }
 }
 
 // 最大化 / 还原
@@ -1736,7 +1828,7 @@ function termBlock(outEl, lines, cls) {
 
 function runTermCommand(cmd, outEl) {
   const c = cmd.toLowerCase();
-  const items = ['about','cv','projects','papers','music','fiction','blog'];
+  const items = ['about','cv','portfolio','research','blog'];
   if (c === 'help') {
     termPrint(outEl, lang === 'zh'
       ? '可用命令: help, clear, ls, open <名称>, about, neofetch'
