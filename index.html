@@ -538,6 +538,7 @@ const T = {
   icoFiction:  { en: 'fiction',  zh: '小说' },
   icoBlog:     { en: 'blog',     zh: '博客' },
   icoAbout:    { en: 'about',    zh: '关于' },
+  icoCV:       { en: 'cv',       zh: '简历' },
   // 桌面 — 杂项
   deskHint:    { en: 'double-click to open', zh: '双击打开' },
   menuTerminal:{ en: 'terminal', zh: '终端' },
@@ -1143,11 +1144,13 @@ const ICO = {
   music:    '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><path d="M16 26V11l13-3v15"/><circle cx="13" cy="27" r="3.2"/><circle cx="26" cy="23" r="3.2"/></svg>',
   fiction:  '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><path d="M8 9h11a3 3 0 013 3v20a3 3 0 00-3-3H8z"/><path d="M32 9H21a3 3 0 00-3 3v20a3 3 0 013-3h11z"/></svg>',
   blog:     '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><rect x="7" y="8" width="26" height="24" rx="1.5"/><path d="M12 15h16M12 20h16M12 25h10"/></svg>',
-  about:    '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><circle cx="20" cy="20" r="13"/><path d="M20 18v8" stroke-linecap="round"/><circle cx="20" cy="13.5" r="1.2" fill="#1a1612" stroke="none"/></svg>'
+  about:    '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><circle cx="20" cy="20" r="13"/><path d="M20 18v8" stroke-linecap="round"/><circle cx="20" cy="13.5" r="1.2" fill="#1a1612" stroke="none"/></svg>',
+  cv:       '<svg viewBox="0 0 40 40" fill="none" stroke="#1a1612" stroke-width="1.5"><rect x="9" y="6" width="22" height="28" rx="1.5"/><circle cx="20" cy="15" r="3.5"/><path d="M14 25c0-3 2.7-5 6-5s6 2 6 5"/></svg>'
 };
 
 const DESK_ITEMS = [
   { id: 'about',    labelKey: 'icoAbout' },
+  { id: 'cv',       labelKey: 'icoCV' },
   { id: 'projects', labelKey: 'icoProjects' },
   { id: 'papers',   labelKey: 'icoPapers' },
   { id: 'music',    labelKey: 'icoMusic' },
@@ -1199,16 +1202,49 @@ function winContent(id) {
   const zh = lang === 'zh';
   const E = '<a target="_blank" rel="noopener" ';  // 外链前缀
   if (id === 'about') {
-    return zh ? (
-      '<p>嗨，我是<b>翁小淇</b>。</p>' +
-      '<p>音频工程师 · 声音设计师 · 音乐制作人 · 作曲。</p>' +
-      '<p>目前在<b>伯恩茅斯大学</b>读计算机科学博士(二年级),研究方向是沉浸式音频、心理声学、多模态机器学习。</p>' +
-      '<p>常驻英国伯明翰。皇家伯明翰音乐学院(BCU)出身。</p>'
+    const links =
+      '<hr style="border:none;border-top:1px dashed rgba(42,37,34,.2);margin:12px 0">' +
+      '<p style="font-size:13px">' +
+        E + 'href="https://xiaoqiweng.com">' + (zh?'联系我':'Contact') + '</a></p>';
+    return (zh ? (
+      '<p>我是<b>翁小淇</b>。</p>' +
+      '<p>音频工程 · 作曲 · 游戏设计。</p>' +
+      '<p>现在在<b>伯恩茅斯</b>，读伯恩茅斯大学计算机科学博士(二年级)，研究沉浸式音频、心理声学与多模态机器学习。此前在伯明翰，皇家伯明翰音乐学院(RBC / BCU)。</p>' +
+      '<p>也可以去看看我的爱犬 ' +
+      E + 'href="https://xiaoqiweng.com/captain"><b>Captain（船长）</b></a> 的主页。</p>'
     ) : (
-      '<p>Hi, I\'m <b>Xiaoqi Weng</b>.</p>' +
-      '<p>Audio Engineer · Sound Designer · Music Producer · Composer.</p>' +
-      '<p>Currently a 2nd-year PhD student in Computer Science at <b>Bournemouth University</b>. My research covers immersive audio, psychoacoustics, and multimodal machine learning.</p>' +
-      '<p>Based in Birmingham, UK. Royal Birmingham Conservatoire (BCU).</p>'
+      '<p>I\'m <b>Xiaoqi Weng</b>.</p>' +
+      '<p>Audio Engineering · Composition · Game Design.</p>' +
+      '<p>Now in <b>Bournemouth</b>, a 2nd-year PhD student in Computer Science at Bournemouth University — researching immersive audio, psychoacoustics and multimodal machine learning. Previously at the Royal Birmingham Conservatoire (RBC / BCU).</p>' +
+      '<p>You can also meet my dog ' +
+      E + 'href="https://xiaoqiweng.com/captain"><b>Captain</b></a>.</p>'
+    )) + links;
+  }
+  if (id === 'cv') {
+    const H = (s) => '<p style="font-weight:700;margin:12px 0 4px;color:#963a32">' + s + '</p>';
+    const pdf = 'https://drive.google.com/file/d/1uG_zw4eD91SNjReGKrlJdwXKe-IfKLOK/view';
+    return (
+      '<p>' + E + 'href="' + pdf + '"><b>' + (zh?'下载 PDF 版 ↗':'Download PDF ↗') + '</b></a></p>' +
+      H(zh?'教育':'Education') +
+      '<p>2025–' + (zh?'至今':'now') + ' · ' + (zh?'伯恩茅斯大学 计算机科学 博士':'PhD, Computer Science, Bournemouth University') + '</p>' +
+      '<p>2022–2024 · ' + (zh?'皇家伯明翰音乐学院 音乐学 硕士 (Distinction)':'MMus, Royal Birmingham Conservatoire (Distinction)') + '</p>' +
+      '<p style="font-size:12px;color:rgba(42,37,34,.55)">' + (zh?'极简配置下的音乐交互与合成器声音设计':'Music Interaction & Synth Sound Design under Minimalist Setup') + '</p>' +
+      '<p>2018–2022 · ' + (zh?'四川音乐学院 流行音乐表演与制作 学士':'BFA, Sichuan Conservatory of Music — Pop Music Performance & Production') + '</p>' +
+      H(zh?'工作经历':'Experience') +
+      '<p>2020–2021 · ' + (zh?'宁波大树文化传媒 · 音乐制作人':'Ningbo Big Tree Media · Music Producer') + '</p>' +
+      '<p style="font-size:12px;color:rgba(42,37,34,.55)">' + (zh?'新农村音乐专辑《Still the Same Appearance》选曲/编曲/录音/混音':'album "Still the Same Appearance" — arrangement, recording, mixing') + '</p>' +
+      '<p>2018–2019 · ' + (zh?'北京电子绅士文化 · 音乐制作人':'Beijing Electronic Gentlemen Culture · Music Producer') + '</p>' +
+      H(zh?'技能':'Skills') +
+      '<p style="font-size:13px"><b>DAW</b> · Cubase, Pro Tools, Logic Pro, Reaper, FL Studio, Ableton Live</p>' +
+      '<p style="font-size:13px"><b>' + (zh?'音频编程':'Audio Coding') + '</b> · Max/MSP Jitter, PureData</p>' +
+      '<p style="font-size:13px"><b>' + (zh?'中间件':'Middleware') + '</b> · Wwise, FMOD, MetaSound</p>' +
+      '<p style="font-size:13px"><b>' + (zh?'编程语言':'Languages') + '</b> · Java, Lua, C++, C#, Python</p>' +
+      '<p style="font-size:13px"><b>' + (zh?'其他':'Others') + '</b> · Unity, UE, Final Cut Pro, Sibelius, MuseScore</p>' +
+      H(zh?'获奖精选':'Selected Awards') +
+      '<p>2024 · Skövde Academic Game Award — <i>Be My Guest</i></p>' +
+      '<p>2024 · CUSGA ' + (zh?'中国大学生游戏开发大赛 最具潜力奖':'China Univ. Student Game Dev — Most Promising') + ' — <i>Be My Guest</i></p>' +
+      '<p>2023 · Global Game Jam — <i>Meme Fight</i> ' + (zh?'配乐/音效':'OST & SFX') + '</p>' +
+      '<p>2022 · ' + (zh?'游戏开发嘉年华 最佳美术奖':'Game Dev Carnival — Best Art') + ' — <i>Listen</i></p>'
     );
   }
   if (id === 'projects') {
@@ -1295,6 +1331,9 @@ function openWindow(item) {
   if (item.id === 'music') {
     win.style.width = '460px';
     win.style.height = '440px';
+  } else if (item.id === 'cv') {
+    win.style.width = '440px';
+    win.style.height = '420px';
   } else {
     win.style.width = '420px';
     win.style.height = '300px';
@@ -1697,7 +1736,7 @@ function termBlock(outEl, lines, cls) {
 
 function runTermCommand(cmd, outEl) {
   const c = cmd.toLowerCase();
-  const items = ['about','projects','papers','music','fiction','blog'];
+  const items = ['about','cv','projects','papers','music','fiction','blog'];
   if (c === 'help') {
     termPrint(outEl, lang === 'zh'
       ? '可用命令: help, clear, ls, open <名称>, about, neofetch'
