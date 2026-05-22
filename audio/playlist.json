@@ -1,0 +1,162 @@
+{
+  "categories": {
+    "game": {
+      "en": "Game Music",
+      "zh": "游戏音乐"
+    },
+    "pop": {
+      "en": "Pop Music",
+      "zh": "流行音乐"
+    },
+    "recording": {
+      "en": "Recording",
+      "zh": "录音"
+    },
+    "compose": {
+      "en": "Composition",
+      "zh": "作曲"
+    }
+  },
+  "tracks": [
+    {
+      "title": "枳夏(summer)",
+      "category": "game",
+      "url": "audio/Zhixia_ins.mp3",
+      "year": 2024,
+      "note": "for Girl's Wonderful Journey, Theme"
+    },
+    {
+      "title": "Wish someone would love me",
+      "category": "pop",
+      "url": "audio/Wish%20someone%20would%20love%20me.mp3",
+      "year": 2026,
+      "note": ""
+    },
+    {
+      "title": "Pink Hair 1st mov",
+      "category": "compose",
+      "url": "audio/Pink%20Hair%201st%20mov%281%29.mp3",
+      "year": 2025,
+      "note": "For my friend - Linghua."
+    },
+    {
+      "title": "Pink Hair 2nd mov",
+      "category": "compose",
+      "url": "audio/Pink%20Hair%202nd%20mov%281%29.mp3",
+      "year": 2023,
+      "note": "For my friend - Linghua."
+    },
+    {
+      "title": "Pink Hair 3rd mov",
+      "category": "compose",
+      "url": "audio/Pink%20Hair%203rd%20mov%281%29.mp3",
+      "year": 2023,
+      "note": "For my friend - Linghua, RIP."
+    },
+    {
+      "title": "Meme Fight - Theme",
+      "category": "game",
+      "url": "audio/Meme%20Fight.mp3",
+      "year": 2024,
+      "note": ""
+    },
+    {
+      "title": "Stars",
+      "category": "recording",
+      "url": "audio/lxy13.mp3",
+      "year": 2024,
+      "note": ""
+    },
+    {
+      "title": "Hit the road",
+      "category": "pop",
+      "url": "audio/hit%20the%20road%20master.mp3",
+      "year": 2020,
+      "note": ""
+    },
+    {
+      "title": "Give me a hug",
+      "category": "pop",
+      "url": "audio/give%20me%20a%20hug%20final.mp3",
+      "year": 2021,
+      "note": ""
+    },
+    {
+      "title": "CG sound fx",
+      "category": "game",
+      "url": "audio/CG.mp3",
+      "year": 2024,
+      "note": ""
+    },
+    {
+      "title": "侬zei阿里(Where're u)",
+      "category": "pop",
+      "url": "audio/%E4%BE%ACzei%E9%98%BF%E9%87%8C.mp3",
+      "year": 2020,
+      "note": ""
+    },
+    {
+      "title": "Movments Sound Floey",
+      "category": "game",
+      "url": "audio/%E5%9F%BA%E7%A1%80%E5%8A%A8%E4%BD%9C%E8%B7%91%E8%B7%B3.1.mp3",
+      "year": 2024,
+      "note": ""
+    },
+    {
+      "title": "You don't know me",
+      "category": "pop",
+      "url": "audio/19.11.13_2.mp3",
+      "year": 2019,
+      "note": ""
+    },
+    {
+      "title": "Noname-8bit version",
+      "category": "game",
+      "url": "audio/8Bit_Track.mp3",
+      "year": 2023,
+      "note": ""
+    },
+    {
+      "title": "Hands on Nuclar - Theme",
+      "category": "game",
+      "url": "audio/05%20Theme.mp3",
+      "year": 2023,
+      "note": "The Theme of Relignition"
+    },
+    {
+      "title": "Fly me to the Moon - Boom",
+      "category": "game",
+      "url": "audio/04%20FlyMeBossaN.mp3",
+      "year": 2023,
+      "note": "BGM For Relignition"
+    },
+    {
+      "title": "Fly me to the Moon - Please",
+      "category": "game",
+      "url": "audio/03%20Fly%20Me%20To%20The%20Moon.mp3",
+      "year": 2023,
+      "note": "BGM For Relignition"
+    },
+    {
+      "title": "Time to make it",
+      "category": "game",
+      "url": "audio/02%20Before%20Nuclear%20Bomb%20Launch.mp3",
+      "year": 2023,
+      "note": "BGM For Relignition"
+    },
+    {
+      "title": "Zhuo Meet Monsters",
+      "category": "game",
+      "url": "audio/01%20Full_Battle.mp3",
+      "year": 2024,
+      "note": "Battle Theme For Be My Guest"
+    },
+    {
+      "title": "Command",
+      "category": "game",
+      "url": "audio/01%20Daily%20Theme.mp3",
+      "year": 2023,
+      "note": "BGM For Relignition"
+    }
+  ]
+}
