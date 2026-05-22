@@ -354,14 +354,54 @@ body::after{
 }
 .win-body a:hover{border-bottom-color:#963a32}
 
-/* 嵌入播放器 */
-.player-block{margin:12px 0}
-.player-cap{
-  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(42,37,34,.5);margin-bottom:5px;
+/* ── 自定义纸质播放器 ── */
+.player-loading{color:rgba(42,37,34,.5);font-style:italic;padding:20px 0}
+.player-root{display:flex;flex-direction:column;height:100%}
+/* 分类标签 */
+.pl-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.pl-tab{
+  font-family:inherit;font-size:12px;letter-spacing:.04em;
+  background:transparent;border:1px solid rgba(42,37,34,.25);
+  color:rgba(42,37,34,.6);padding:4px 10px;border-radius:3px;cursor:pointer;
+  transition:all .12s;
 }
-.sc-frame{width:100%;height:120px;border:1px solid rgba(42,37,34,.2);border-radius:3px}
-.ne-frame{width:100%;height:90px;border:1px solid rgba(42,37,34,.2);border-radius:3px}
+.pl-tab:hover{background:rgba(42,37,34,.06)}
+.pl-tab.active{background:rgba(42,37,34,.12);color:#1a1612;border-color:rgba(42,37,34,.45)}
+.pl-count{opacity:.5;font-size:10px}
+/* 正在播放 */
+.pl-now{min-height:32px;margin-bottom:6px;border-bottom:1px dashed rgba(42,37,34,.2);padding-bottom:6px}
+.pl-now-t{display:block;font-size:15px;color:#963a32;text-shadow:0 0 .4px rgba(150,58,50,.3)}
+.pl-now-n{display:block;font-size:11px;color:rgba(42,37,34,.5)}
+.pl-now-idle{font-size:13px;color:rgba(42,37,34,.4);font-style:italic}
+/* 进度条 */
+.pl-bar-wrap{margin:4px 0 8px}
+.pl-bar{height:5px;background:rgba(42,37,34,.15);border-radius:3px;cursor:pointer;overflow:hidden}
+.pl-bar-fill{height:100%;width:0;background:#963a32;transition:width .15s linear}
+.pl-time{display:flex;justify-content:space-between;font-size:10px;color:rgba(42,37,34,.45);margin-top:3px}
+/* 控制按钮 */
+.pl-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin:4px 0 10px}
+.pl-btn{
+  font-family:inherit;font-size:16px;background:transparent;border:none;
+  color:#1a1612;cursor:pointer;padding:4px 6px;transition:transform .1s,color .12s;
+}
+.pl-btn:hover{color:#963a32;transform:scale(1.15)}
+.pl-play{font-size:22px}
+/* 曲目列表 */
+.pl-list{flex:1;overflow-y:auto;border-top:1px solid rgba(42,37,34,.15);padding-top:6px}
+.pl-track{
+  display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+  font-family:inherit;background:transparent;border:none;cursor:pointer;
+  color:#1a1612;padding:6px 4px;border-bottom:1px dotted rgba(42,37,34,.12);
+  transition:background .1s,padding-left .1s;
+}
+.pl-track:hover{background:rgba(42,37,34,.05);padding-left:8px}
+.pl-track.cur{background:rgba(150,58,50,.08)}
+.pl-track.cur .pl-ttitle{color:#963a32}
+.pl-tnum{font-size:11px;color:rgba(42,37,34,.4);min-width:20px}
+.pl-tinfo{flex:1;min-width:0}
+.pl-ttitle{display:block;font-size:14px;line-height:1.3;overflow:hidden;text-overflow:ellipsis}
+.pl-note{display:block;font-size:11px;color:rgba(42,37,34,.45)}
+.pl-yr{font-size:11px;color:rgba(42,37,34,.4)}
 
 /* 窗口缩放把手 */
 .win-resize{
@@ -1195,34 +1235,10 @@ function winContent(id) {
     );
   }
   if (id === 'music') {
-    const P = 'https://zjnbwxq.github.io/Xiaoqi-Weng.github.io//portfolio/';
-    return (
-      '<p>🎼 <b>' + (zh?'音乐制作 · 7 年':'music producer · 7 years') + '</b></p>' +
-      '<p style="color:rgba(42,37,34,.6);font-size:13px">' + (zh?'专辑、演唱会与现场演出。':'albums, concerts and live shows.') + '</p>' +
-      // SoundCloud (海外稳定)
-      '<div class="player-block">' +
-        '<div class="player-cap">SoundCloud</div>' +
-        '<iframe class="sc-frame" scrolling="no" frameborder="no" allow="autoplay" loading="lazy" ' +
-        'src="https://w.soundcloud.com/player/?url=' +
-        encodeURIComponent('https://soundcloud.com/zjnbwxq') +
-        '&color=%23963a32&inverse=false&auto_play=false&show_user=true"></iframe>' +
-      '</div>' +
-      // 网易云 (国内,海外可能加载慢/失败,有链接兜底)
-      '<div class="player-block">' +
-        '<div class="player-cap">' + (zh?'网易云音乐':'NetEase Music') + '</div>' +
-        '<iframe class="ne-frame" frameborder="no" border="0" marginwidth="0" marginheight="0" loading="lazy" ' +
-        'src="//music.163.com/outchain/player?type=0&id=92041057&auto=0&height=90"></iframe>' +
-        '<p style="font-size:12px;margin-top:4px">' + (zh?'加载不出?':'Can\'t load?') + ' ' +
-        E + 'href="https://music.163.com/#/album?id=92041057">Still the Same Appearance ↗</a> · ' +
-        E + 'href="https://music.163.com/#/song?id=1484710060">Chopsticks ↗</a></p>' +
-      '</div>' +
-      '<hr style="border:none;border-top:1px dashed rgba(42,37,34,.2);margin:12px 0">' +
-      '<p style="margin-bottom:6px"><b>' + (zh?'歌单':'playlists') + '</b></p>' +
-      '<p>🎮 ' + E + 'href="' + P + 'portfolio-2/">' + (zh?'游戏音乐':'Game Music') + ' ↗</a></p>' +
-      '<p>🎤 ' + E + 'href="' + P + 'portfolio-3/">' + (zh?'流行音乐':'Pop Music') + ' ↗</a></p>' +
-      '<p>🎙️ ' + E + 'href="' + P + 'portfolio-4/">' + (zh?'录音作品':'Recording') + ' ↗</a></p>' +
-      '<p style="margin-top:8px">' + E + 'href="https://www.youtube.com/@trmaklesoundie">YouTube ↗</a></p>'
-    );
+    // 播放器容器,内容由 initPlayer() 异步加载 playlist.json 后填充
+    return '<div class="player-root" id="player-root">' +
+      '<div class="player-loading">' + (zh?'加载歌单…':'loading playlist…') + '</div>' +
+    '</div>';
   }
   if (id === 'fiction') {
     return (
@@ -1322,6 +1338,9 @@ function openWindow(item) {
 
   makeDraggable(win, win.querySelector('.win-bar'));
   makeResizable(win, win.querySelector('.win-resize'));
+
+  // 音乐窗口:加载播放器
+  if (item.id === 'music') initPlayer(win);
 }
 
 // 最大化 / 还原
@@ -1430,6 +1449,173 @@ function startClock() {
   tick();
   if (clockTimer) clearInterval(clockTimer);
   clockTimer = setInterval(tick, 1000 * 20);
+}
+
+// ═════════════════════════════════════
+//  MUSIC PLAYER — 读取 audio/playlist.json
+// ═════════════════════════════════════
+let playlistData = null;       // 缓存,避免重复加载
+let playerAudio = null;        // 全局 <audio>
+let playerState = {
+  tracks: [],                  // 当前分类下的曲目
+  index: -1,                   // 当前曲在 tracks 里的位置
+  category: null,
+  playing: false
+};
+
+async function initPlayer(win) {
+  const root = win.querySelector('#player-root');
+  const zh = lang === 'zh';
+
+  // 加载 json (相对路径,部署在 GitHub Pages 上即 audio/playlist.json)
+  if (!playlistData) {
+    try {
+      const resp = await fetch('audio/playlist.json');
+      playlistData = await resp.json();
+    } catch (e) {
+      root.innerHTML = '<p class="win-empty">' +
+        (zh ? '歌单加载失败。本地直接打开 html 时无法读取 json,部署到网站后即正常。'
+            : 'Could not load playlist. (Opening the html locally blocks fetch; works once deployed.)') +
+        '</p>';
+      return;
+    }
+  }
+
+  // 全局 audio 只建一次
+  if (!playerAudio) {
+    playerAudio = new Audio();
+    playerAudio.addEventListener('timeupdate', updatePlayerProgress);
+    playerAudio.addEventListener('ended', () => playerNext());
+    playerAudio.addEventListener('play',  () => { playerState.playing = true;  refreshPlayPause(); });
+    playerAudio.addEventListener('pause', () => { playerState.playing = false; refreshPlayPause(); });
+  }
+
+  renderPlayer(root);
+}
+
+function renderPlayer(root) {
+  const zh = lang === 'zh';
+  const cats = playlistData.categories;
+  const catKeys = Object.keys(cats);
+  // 默认分类:第一个有歌的分类
+  if (!playerState.category) {
+    playerState.category = catKeys.find(k =>
+      playlistData.tracks.some(t => t.category === k)) || catKeys[0];
+  }
+
+  // 分类标签
+  let tabs = '<div class="pl-tabs">';
+  catKeys.forEach(k => {
+    const count = playlistData.tracks.filter(t => t.category === k).length;
+    if (count === 0) return;
+    const name = cats[k][lang] || cats[k].en;
+    tabs += '<button class="pl-tab' + (k === playerState.category ? ' active' : '') +
+      '" data-cat="' + k + '">' + name + ' <span class="pl-count">' + count + '</span></button>';
+  });
+  tabs += '</div>';
+
+  root.innerHTML =
+    tabs +
+    '<div class="pl-now" id="pl-now"></div>' +
+    '<div class="pl-bar-wrap"><div class="pl-bar" id="pl-bar"><div class="pl-bar-fill" id="pl-bar-fill"></div></div>' +
+      '<div class="pl-time"><span id="pl-cur">0:00</span><span id="pl-dur">0:00</span></div></div>' +
+    '<div class="pl-controls">' +
+      '<button class="pl-btn" id="pl-prev" title="prev">⏮</button>' +
+      '<button class="pl-btn pl-play" id="pl-play" title="play">▶</button>' +
+      '<button class="pl-btn" id="pl-next" title="next">⏭</button>' +
+    '</div>' +
+    '<div class="pl-list" id="pl-list"></div>';
+
+  // 绑定分类切换
+  root.querySelectorAll('.pl-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      playerState.category = tab.dataset.cat;
+      clickSound();
+      renderPlayer(root);
+    });
+  });
+  // 控制按钮
+  root.querySelector('#pl-prev').addEventListener('click', () => { clickSound(); playerPrev(); });
+  root.querySelector('#pl-next').addEventListener('click', () => { clickSound(); playerNext(); });
+  root.querySelector('#pl-play').addEventListener('click', () => { clickSound(); playerTogglePlay(); });
+  // 进度条点击跳转
+  root.querySelector('#pl-bar').addEventListener('click', e => {
+    if (!playerAudio || !playerAudio.duration) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    playerAudio.currentTime = ((e.clientX - r.left) / r.width) * playerAudio.duration;
+  });
+
+  // 当前分类曲目列表
+  playerState.tracks = playlistData.tracks.filter(t => t.category === playerState.category);
+  const listEl = root.querySelector('#pl-list');
+  listEl.innerHTML = '';
+  playerState.tracks.forEach((tr, i) => {
+    const row = document.createElement('button');
+    row.className = 'pl-track';
+    const yr = tr.year ? '<span class="pl-yr">' + tr.year + '</span>' : '';
+    const note = tr.note ? '<span class="pl-note">' + tr.note + '</span>' : '';
+    row.innerHTML = '<span class="pl-tnum">' + String(i+1).padStart(2,'0') + '</span>' +
+      '<span class="pl-tinfo"><span class="pl-ttitle">' + tr.title + '</span>' + note + '</span>' + yr;
+    row.addEventListener('click', () => { clickSound(); playerPlayIndex(i); });
+    listEl.appendChild(row);
+  });
+
+  refreshNowPlaying();
+  refreshPlayPause();
+  highlightCurrent();
+}
+
+function playerPlayIndex(i) {
+  const tr = playerState.tracks[i];
+  if (!tr) return;
+  playerState.index = i;
+  playerAudio.src = tr.url;
+  playerAudio.play().catch(()=>{});
+  refreshNowPlaying();
+  highlightCurrent();
+}
+function playerTogglePlay() {
+  if (!playerAudio.src) { playerPlayIndex(0); return; }
+  if (playerAudio.paused) playerAudio.play().catch(()=>{});
+  else playerAudio.pause();
+}
+function playerNext() {
+  if (playerState.index < playerState.tracks.length - 1) playerPlayIndex(playerState.index + 1);
+  else playerPlayIndex(0); // 循环
+}
+function playerPrev() {
+  if (playerState.index > 0) playerPlayIndex(playerState.index - 1);
+  else playerPlayIndex(playerState.tracks.length - 1);
+}
+
+function refreshNowPlaying() {
+  const el = document.getElementById('pl-now');
+  if (!el) return;
+  const tr = playerState.tracks[playerState.index];
+  if (!tr) { el.innerHTML = '<span class="pl-now-idle">' + (lang==='zh'?'选一首开始':'pick a track') + '</span>'; return; }
+  el.innerHTML = '<span class="pl-now-t">' + tr.title + '</span>' +
+    (tr.note ? '<span class="pl-now-n">' + tr.note + '</span>' : '');
+}
+function refreshPlayPause() {
+  const btn = document.getElementById('pl-play');
+  if (btn) btn.textContent = playerState.playing ? '⏸' : '▶';
+}
+function highlightCurrent() {
+  const rows = document.querySelectorAll('#pl-list .pl-track');
+  rows.forEach((r, i) => r.classList.toggle('cur', i === playerState.index));
+}
+function updatePlayerProgress() {
+  const fill = document.getElementById('pl-bar-fill');
+  const cur = document.getElementById('pl-cur');
+  const dur = document.getElementById('pl-dur');
+  if (!fill || !playerAudio.duration) return;
+  fill.style.width = (playerAudio.currentTime / playerAudio.duration * 100) + '%';
+  if (cur) cur.textContent = fmtTime(playerAudio.currentTime);
+  if (dur) dur.textContent = fmtTime(playerAudio.duration);
+}
+function fmtTime(s) {
+  s = Math.floor(s || 0);
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
 }
 
 // ── 终端窗口 ──
